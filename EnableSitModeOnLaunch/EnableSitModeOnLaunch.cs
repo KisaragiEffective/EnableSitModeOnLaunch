@@ -27,6 +27,7 @@ namespace EnableSitModeOnLaunch
     [UsedImplicitly]
     internal class Patcher
     {
+        private static bool _first = true;
         // ReSharper disable once UnusedParameter.Local
         [UsedImplicitly]
         private static bool Prefix(Facet facet, Slot root)
@@ -34,7 +35,11 @@ namespace EnableSitModeOnLaunch
             var ui = new UIBuilder(root);
             RadiantUI_Constants.SetupDefaultStyle(ui);
             var trackingSpaceSync = root.AttachComponent<UserTrackingSpaceSync>();
-            trackingSpaceSync.SeatedMode.Value = true;
+            if (_first)
+            {
+                trackingSpaceSync.SeatedMode.Value = true;
+                _first = false;
+            }
             // TODO: this should be translated (blocked by local build issue)
             ui.Button(NeosAssets.Graphics.Icons.General.ExitAvatarAnchor, (LocaleString) "---").SetupToggle(trackingSpaceSync.SeatedMode, new OptionDescription<bool>
             {
