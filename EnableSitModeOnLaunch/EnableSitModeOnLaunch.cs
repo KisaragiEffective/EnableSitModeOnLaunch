@@ -1,6 +1,4 @@
 ﻿using FrooxEngine;
-using FrooxEngine.UIX;
-using HarmonyLib;
 using JetBrains.Annotations;
 using NeosModLoader;
 
@@ -13,44 +11,11 @@ namespace EnableSitModeOnLaunch
     {
         public override string Name => "EnableSitModeOnLaunch";
         public override string Author => "kisaragi marine";
-        public override string Version => "0.1.2";
+        public override string Version => "0.1.3";
 
         public override void OnEngineInit()
         {
-            var harmony = new Harmony("com.github.kisaragieffective.neos.EnableSitModeOnLaunch");
-            harmony.PatchAll();
-            Msg("Injected");
-        }
-    }
-
-    [HarmonyPatch(typeof(SeatedModeFacetPreset), "Build")]
-    [UsedImplicitly]
-    internal class Patcher
-    {
-        private static bool _first = true;
-        // ReSharper disable once UnusedParameter.Local
-        [UsedImplicitly]
-        private static bool Prefix(Facet facet, Slot root)
-        {
-            var ui = new UIBuilder(root);
-            RadiantUI_Constants.SetupDefaultStyle(ui);
-            var trackingSpaceSync = root.AttachComponent<UserTrackingSpaceSync>();
-            if (_first)
-            {
-                trackingSpaceSync.SeatedMode.Value = true;
-                _first = false;
-            }
-            // TODO: this should be translated (blocked by local build issue)
-            ui.Button(NeosAssets.Graphics.Icons.General.ExitAvatarAnchor, (LocaleString) "---").SetupToggle(trackingSpaceSync.SeatedMode, new OptionDescription<bool>
-            {
-                spriteUrl = NeosAssets.Graphics.Icons.General.EnterAvatarAnchor,
-                label = "Options.SeatedMode.On"
-            }, new OptionDescription<bool>
-            {
-                spriteUrl = NeosAssets.Graphics.Icons.General.ExitAvatarAnchor,
-                label = "Options.SeatedMode.Off"
-            });
-            return false; // overwrite behavior
+            Engine.Current.RunPostInit(() => Engine.Current.InputInterface.SeatedMode = true);
         }
     }
 }
