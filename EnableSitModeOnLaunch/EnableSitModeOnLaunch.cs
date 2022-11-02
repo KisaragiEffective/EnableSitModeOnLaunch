@@ -11,7 +11,7 @@ namespace EnableSitModeOnLaunch
     {
         public override string Name => "EnableSitModeOnLaunch";
         public override string Author => "kisaragi marine";
-        public override string Version => "0.1.2";
+        public override string Version => "0.1.3";
 
         public override void OnEngineInit()
         {
